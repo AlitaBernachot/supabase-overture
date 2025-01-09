@@ -1,0 +1,9 @@
+{
+	"private": true,
+	"scripts": {
+		"backend:start": "supabase start"
+	},
+	"devDependencies": {
+		"supabase": "^2.2.1"
+	}
+}
