@@ -1,5 +1,11 @@
 # supabase-overture
 
+Install project
+
+```sh
+pnpm install
+```
+
 How to start the project:
 
 1. Start Supabase instance locally
