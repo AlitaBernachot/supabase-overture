@@ -4,8 +4,10 @@ DOCKER_RUN_GDAL = docker compose run --rm --user=`id -u`:`id -g` gdal
 
 bbox ?= -5.144,47.2778,-1.0157,49.1133 # FR-BRE
 type ?= place
+SCHEMA = overture
 DATA_FILE = data/$(type).geojson
 SQL_FILE = data/$(type).sql
+SQL_MIGRATION_FILE = supabase/migrations/$(TIMESTAMP)_create_ovmap_$(type)_table.sql
 
 -include local.mk
 
@@ -24,13 +26,15 @@ data-download: ## Download Overture Maps data with given BBOX (FR-BRE by default
 
 data-to-sql: ## Prepare geojson as sql file
 	@echo "\033[42m[gdal]\033[0m Converting geojson as sql dump file"
-	$(DOCKER_RUN_GDAL) ogr2ogr -f pgdump /$(SQL_FILE) /$(DATA_FILE) -lco SCHEMA=overture
+	$(DOCKER_RUN_GDAL) ogr2ogr -f pgdump /$(SQL_FILE) /$(DATA_FILE) -lco SCHEMA=$(SCHEMA)
 
 data-move: ## Move sql file to supabase migrations folder
 	@echo "\033[42m[supabase-overture]\033[0m Move sql file to supabase migrations folder"
 	$(eval TIMESTAMP := $(shell date +%Y%m%d%H%M%S))
 	sed -i '/CREATE SCHEMA/d' $(SQL_FILE)
-	mv $(SQL_FILE) supabase/migrations/$(TIMESTAMP)_create_ovmap_$(type)_table.sql
+	mv $(SQL_FILE) $(SQL_MIGRATION_FILE)
+	echo 'ALTER TABLE "$(SCHEMA)"."$(type)" ENABLE ROW LEVEL SECURITY;' >> $(SQL_MIGRATION_FILE)
+	echo 'CREATE POLICY "Enable read access for all users" ON "$(SCHEMA)"."$(type)" FOR SELECT USING (true);' >> $(SQL_MIGRATION_FILE)
 
 .SILENT: data
 data: data-download data-to-sql data-move ## Run download Overture Maps data and convert downloaded data to sql

@@ -1,6 +1,6 @@
 {
 	"name": "supabase-overture",
-  	"version": "0.0.0",
+	"version": "0.0.0",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -17,9 +17,12 @@
 		"backend:start": "supabase start"
 	},
 	"dependencies": {
-	  "pinia": "^2.3.0",
-	  "vue": "^3.5.13",
-	  "vue-router": "^4.5.0"
+		"@supabase/supabase-js": "^2.47.12",
+		"maplibre-gl": "^5.0.0",
+		"pinia": "^2.3.0",
+		"protomaps-themes-base": "^4.3.1",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.0"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "^22.0.0",
@@ -39,8 +42,8 @@
 		"jsdom": "^25.0.1",
 		"npm-run-all2": "^7.0.2",
 		"prettier": "^3.3.3",
-		"supabase": "^2.2.1",
 		"start-server-and-test": "^2.0.9",
+		"supabase": "^2.2.1",
 		"typescript": "~5.6.3",
 		"vite": "^6.0.5",
 		"vite-plugin-vue-devtools": "^7.6.8",

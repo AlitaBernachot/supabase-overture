@@ -1,12 +1,15 @@
 # supabase-overture
 
-Install project
+## Install project
 
 ```sh
 pnpm install
 ```
 
-How to start the project:
+## Start project
+
+NB. for now only place works with the frontend app
+see `function_mvt_place.sql` in migration folder.
 
 1. Start Supabase instance locally
 ```sh
@@ -63,5 +66,3 @@ Find Supabase docker volume:
 ```sh
 docker volume ls --filter label=com.supabase.cli.project=supabase-overture
 ```
-
-## Overture Maps data

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import MapPane from '../components/OvertureMapPane.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <MapPane />
   </main>
 </template>
