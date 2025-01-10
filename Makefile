@@ -1,9 +1,11 @@
 
 DOCKER_RUN_OVERTURE = docker compose run --rm --user=`id -u`:`id -g` overturemaps-downloader
 DOCKER_RUN_GDAL = docker compose run --rm --user=`id -u`:`id -g` gdal
-DATA_PATH = /data/places.geojson
-SQL_FILE = /data/places.sql
+
 bbox ?= -5.144,47.2778,-1.0157,49.1133 # FR-BRE
+type ?= place
+DATA_FILE = data/$(type).geojson
+SQL_FILE = data/$(type).sql
 
 -include local.mk
 
@@ -16,18 +18,19 @@ help: ## Display this help message
 	@echo "Possible targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    %-20s%s\n", $$1, $$2}'
 
-data-download: ## Download Overture Maps data with given BBOX (FR-BRE by default) as geojson
+data-download: ## Download Overture Maps data with given BBOX (FR-BRE by default) as geojson, choose a type, eg. "place", "building", "division_area", ...
 	@echo "\033[42m[overturemaps-downloader]\033[0m Downloading Overture Maps data with BBOX $(bbox) as geojson"
-	$(DOCKER_RUN_OVERTURE) overturemaps download --bbox=$(bbox) -f geojson -o $(DATA_PATH) --type=place
+	$(DOCKER_RUN_OVERTURE) overturemaps download --bbox=$(bbox) -f geojson -o /$(DATA_FILE) --type=$(type)
 
 data-to-sql: ## Prepare geojson as sql file
 	@echo "\033[42m[gdal]\033[0m Converting geojson as sql dump file"
-	$(DOCKER_RUN_GDAL) ogr2ogr -f pgdump $(SQL_FILE) $(DATA_PATH)
+	$(DOCKER_RUN_GDAL) ogr2ogr -f pgdump /$(SQL_FILE) /$(DATA_FILE) -lco SCHEMA=overture
 
 data-move: ## Move sql file to supabase migrations folder
 	@echo "\033[42m[supabase-overture]\033[0m Move sql file to supabase migrations folder"
 	$(eval TIMESTAMP := $(shell date +%Y%m%d%H%M%S))
-	mv data/places.sql supabase/migrations/$(TIMESTAMP)_insert_places_table.sql
+	sed -i '/CREATE SCHEMA/d' $(SQL_FILE)
+	mv $(SQL_FILE) supabase/migrations/$(TIMESTAMP)_create_ovmap_$(type)_table.sql
 
 .SILENT: data
 data: data-download data-to-sql data-move ## Run download Overture Maps data and convert downloaded data to sql

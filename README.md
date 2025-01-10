@@ -8,11 +8,19 @@ pnpm supabase start
 ```
 2. Download the data from Overture Maps locally and prepare as sql file
 ```sh
-make data
+make data # will download place theme
+
+# or
+make data type=building bbox=-4.582084,48.353187,-4.394436,48.440983 # to download building data from Overture Maps
+make data type=division_area # to download division_area data from Overture Maps
+make data type=<the_type> # place, division, building, bathymetry, land, water, ...
+
+# see Overture Maps doc on themes/types:
+# https://docs.overturemaps.org/guides/
 ```
 3. Create Supabase database with Overture Maps data
 ```sh
-pnpm supabase db reset
+pnpm supabase db reset # !!! This will reset DB, if modifications were made outside migration files they will be lost
 ```
 
 ## Local development
