@@ -2,15 +2,18 @@
 
 How to start the project:
 
-1. launch Supabase locally
+1. Start Supabase instance locally
 ```sh
 pnpm supabase start
 ```
-2. download the data locally and prepare as sql file
+2. Download the data from Overture Maps locally and prepare as sql file
 ```sh
 make data
 ```
-3. push data to Supabase
+3. Create Supabase database with Overture Maps data
+```sh
+pnpm supabase db reset
+```
 
 ## Local development
 

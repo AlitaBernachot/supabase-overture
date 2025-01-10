@@ -2,13 +2,11 @@ services:
   overturemaps-downloader:
     build: 
       context: overturemaps-downloader
-      ulimits:
-          nofile:
-            soft: 65536
-            hard: 65536
     env_file:
       - .env
     volumes:
       - ./data:/data
-    ports:
-      - 8081:8080
+  gdal:
+    image: ghcr.io/osgeo/gdal:alpine-small-latest
+    volumes:
+      - ./data:/data
