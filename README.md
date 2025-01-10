@@ -23,6 +23,14 @@ make data type=<the_type> # place, division, building, bathymetry, land, water, 
 pnpm supabase db reset # !!! This will reset DB, if modifications were made outside migration files they will be lost
 ```
 
+4. Store the Supabase URL & public anon key in .env.local for the app
+```sh
+pnpm supabase status -o env \
+  --override-name api.url=VITE_PUBLIC_SUPABASE_URL \
+  --override-name auth.anon_key=VITE_PUBLIC_SUPABASE_ANON_KEY |
+    grep VITE_PUBLIC > .env.local
+```
+
 ## Local development
 
 Supabase has been initialized in this project with:
