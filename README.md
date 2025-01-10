@@ -27,6 +27,16 @@ To start Supabase, simply use:
 # Start the Supabase stack
 pnpm supabase start
 ```
-Local Supabase instance is accessible at http://localhost:54323
+This will start Supabase in a docker container, local Supabase instance is now accessible at http://localhost:54323
+
+Stop Supabase
+```sh
+pnpm supabase stop
+```
+
+Find Supabase docker volume:
+```sh
+docker volume ls --filter label=com.supabase.cli.project=supabase-overture
+```
 
 ## Overture Maps data

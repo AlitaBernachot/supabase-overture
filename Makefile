@@ -23,6 +23,11 @@ data-to-sql: ## Prepare geojson as sql file
 	@echo "\033[42m[overturemaps-downloader]\033[0m Converting geojson as sql dump file"
 	$(DOCKER_RUN_CMD) ogr2ogr -f pgdump $(SQL_FILE) $(DATA_PATH)
 
-data: data-download data-to-sql ## Run download Overture Maps data and convert downloaded data to sql
+data-move: ## Move sql file to supabase migrations folder
+	@echo "\033[42m[supabase-overture]\033[0m Move sql file to supabase migrations folder"
+	$(eval TIMESTAMP := $(shell date +%Y%m%d%H%M%S))
+	mv data/places.sql supabase/migrations/$(TIMESTAMP)_insert_places_table.sql
 
-.PHONY: data data-to-sql data-download
+data: data-download data-to-sql data-move ## Run download Overture Maps data and convert downloaded data to sql
+
+.PHONY: data data-to-sql data-download data-move
