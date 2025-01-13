@@ -1,3 +1,4 @@
+.PHONY: data data-to-sql data-download data-move
 
 DOCKER_RUN_OVERTURE = docker compose run --rm --user=`id -u`:`id -g` overturemaps-downloader
 DOCKER_RUN_GDAL = docker compose run --rm --user=`id -u`:`id -g` gdal
@@ -36,7 +37,10 @@ data-move: ## Move sql file to supabase migrations folder
 	echo 'ALTER TABLE "$(SCHEMA)"."$(type)" ENABLE ROW LEVEL SECURITY;' >> $(SQL_MIGRATION_FILE)
 	echo 'CREATE POLICY "Enable read access for all users" ON "$(SCHEMA)"."$(type)" FOR SELECT USING (true);' >> $(SQL_MIGRATION_FILE)
 
-.SILENT: data
 data: data-download data-to-sql data-move ## Run download Overture Maps data and convert downloaded data to sql
 
-.PHONY: data data-to-sql data-download data-move
+data-all:
+	$(MAKE) data type="place"
+	$(MAKE) data type="building" bbox="-4.58471,48.340945,-4.369962,48.451618"
+	$(MAKE) data type="division"
+	$(MAKE) data type="division_area"

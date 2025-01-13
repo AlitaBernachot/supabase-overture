@@ -20,6 +20,9 @@ pnpm supabase start
 make data # will download place theme
 
 # or
+make data-all # will download place, division, and building theme (it takes around 15min)
+
+# or
 make data type=building bbox=-4.582084,48.353187,-4.394436,48.440983 # to download building data from Overture Maps
 make data type=division_area # to download division_area data from Overture Maps
 make data type=<the_type> # place, division, building, bathymetry, land, water, ...
@@ -66,3 +69,11 @@ Find Supabase docker volume:
 ```sh
 docker volume ls --filter label=com.supabase.cli.project=supabase-overture
 ```
+
+## References
+
+- BBOX fidner https://boundingbox.klokantech.com/
+- https://github.com/supabase/supabase-js
+- https://dev.to/mug-jp/building-a-map-application-with-maplibre-gl-js-and-vuejs-script-setup-4mim
+- https://github.com/maptiler/get-started-vuejs-maplibre-gl-js/tree/main
+- https://github.com/supabase/supabase/tree/master/examples/storage/protomaps

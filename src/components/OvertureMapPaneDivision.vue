@@ -22,8 +22,8 @@ function base64ToArrayBuffer(base64) {
 addProtocol('supabase', async (params, abortController) => {
   const re = new RegExp(/supabase:\/\/(.+)\/(\d+)\/(\d+)\/(\d+)/)
   const result = params.url.match(re)
-
   const { data, error } = await client.rpc('mvt_' + result[1], {
+    divisiontype: 'localadmin',
     relation: result[1],
     z: result[2],
     x: result[3],
@@ -65,16 +65,17 @@ function loadDetails(element, id) {
 onMounted(() => {
   const map = new Map({
         hash: true,
-        center: [-2.842,48.212],
         container: 'map',
-        zoom: 7.5,
+        center: [-2.68, 48.16],
+        zoom: 7,
+        bearing: 0,
         style: {
           version: 8,
           glyphs: 'https://cdn.protomaps.com/fonts/pbf/{fontstack}/{range}.pbf',
           sources: {
             supabase: {
               type: 'vector',
-              tiles: ['supabase://places/{z}/{x}/{y}'],
+              tiles: ['supabase://divisions/{z}/{x}/{y}'],
               attribution:
                 '© <a href="https://overturemaps.org">Overture Maps Foundation</a>',
             },
@@ -90,94 +91,26 @@ onMounted(() => {
           layers: [
             ...noLabels('protomaps', 'black'),
             {
-              id: 'overture-pois',
-              type: 'circle',
+              id: 'overture-divisions',
+              type: 'fill',
               source: 'supabase',
-              'source-layer': 'places',
-              paint: {
-                'circle-color': [
-                  'case',
-                  ['==', ['get', 'main_category'], 'beauty_salon'],
-                  '#fb9a99',
-                  ['==', ['get', 'main_category'], 'hotel'],
-                  '#33a02c',
-                  [
-                    '==',
-                    ['get', 'main_category'],
-                    'landmark_and_historical_building',
-                  ],
-                  '#a6cee3',
-                  ['==', ['get', 'main_category'], 'professional_services'],
-                  '#fdbf6f',
-                  ['==', ['get', 'main_category'], 'shopping'],
-                  '#e31a1c',
-                  ['==', ['get', 'main_category'], 'restaurant'],
-                  '#1f78b4',
-                  ['==', ['get', 'main_category'], 'school'],
-                  '#ff7f00',
-                  ['==', ['get', 'main_category'], 'accommodation'],
-                  '#b2df8a',
-                  '#cab2d6',
-                ],
-                'circle-radius': [
-                  'interpolate',
-                  ['exponential', 2],
-                  ['zoom'],
-                  0,
-                  1,
-                  19,
-                  8,
-                ],
-                'circle-stroke-width': [
-                  'interpolate',
-                  ['exponential', 2],
-                  ['zoom'],
-                  12,
-                  0,
-                  14,
-                  2,
-                ],
-                'circle-stroke-color': 'black',
-              },
+              'source-layer': 'divisions',
+              'paint': {
+                "fill-color": "#051AF0",
+                "fill-opacity": 0.7,
+                "fill-outline-color": "#000000",
+              }
             },
             {
-              id: 'overture-pois-text',
+              id: 'overture-divisions-text',
               type: 'symbol',
               source: 'supabase',
-              'source-layer': 'places',
+              'source-layer': 'divisions',
               layout: {
                 'text-field': '{primary_name}',
                 'text-font': ['Noto Sans Regular'],
                 'text-size': 10,
-              },
-              paint: {
-                'text-color': [
-                  'case',
-                  ['==', ['get', 'main_category'], 'beauty_salon'],
-                  '#fb9a99',
-                  ['==', ['get', 'main_category'], 'hotel'],
-                  '#33a02c',
-                  [
-                    '==',
-                    ['get', 'main_category'],
-                    'landmark_and_historical_building',
-                  ],
-                  '#a6cee3',
-                  ['==', ['get', 'main_category'], 'professional_services'],
-                  '#fdbf6f',
-                  ['==', ['get', 'main_category'], 'shopping'],
-                  '#e31a1c',
-                  ['==', ['get', 'main_category'], 'restaurant'],
-                  '#1f78b4',
-                  ['==', ['get', 'main_category'], 'school'],
-                  '#ff7f00',
-                  ['==', ['get', 'main_category'], 'accommodation'],
-                  '#b2df8a',
-                  '#cab2d6',
-                ],
-                'text-halo-width': 1,
-                'text-halo-color': 'black',
-              },
+              }
             },
           ],
         },

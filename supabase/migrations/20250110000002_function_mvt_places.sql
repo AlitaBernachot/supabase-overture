@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION mvt_place(relation text, z integer, x integer, y integer)
+CREATE OR REPLACE FUNCTION mvt_places(relation text, z integer, x integer, y integer)
 RETURNS text
 LANGUAGE plpgsql
 AS $$
